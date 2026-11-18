@@ -1,0 +1,23 @@
+{
+  "name": "grampath-ai-secure",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Full-stack UP Scholarship eligibility navigator with Helmet, Cloudflare-ready gateway, SQLite and rate limiting",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env gateway.js",
+    "check": "node --check gateway.js && node --check assets/app.js",
+    "test": "node --test tests/app.test.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

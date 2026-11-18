@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f5ef" />
+    <title>GramPath | UP Scholarship Guide</title>
+    <link rel="stylesheet" href="/assets/style.css" />
+    <script src="/assets/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#eligibility">Skip to eligibility</a>
+    <header class="site-header">
+      <div class="container header-row">
+        <a href="/" class="brand">GramPath<span>.</span></a>
+        <nav aria-label="Main navigation">
+          <a href="#eligibility">Eligibility</a>
+          <a href="#documents">Documents</a>
+          <a href="#deadline">Deadlines</a>
+          <a href="#help">Help</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="eligibility">
+        <div class="intro">
+          <h1>UP Scholarship<br />eligibility checker</h1>
+          <p>
+            Check the basic requirements, see which documents to prepare, and
+            plan before the deadline.
+          </p>
+        </div>
+        <div id="connectionMessage" class="notice hidden" role="status"></div>
+        <div class="eligibility-layout">
+          <form class="panel" id="eligForm">
+            <h2>Your details</h2>
+            <div class="form-grid">
+              <label
+                >Do you have UP domicile?
+                <select id="domicile" required>
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="unknown">Not sure</option>
+                </select>
+              </label>
+              <label
+                >Category
+                <select id="category" required>
+                  <option value="">Select</option>
+                  <option value="general">General</option>
+                  <option value="ews">General-EWS</option>
+                  <option value="obc">OBC</option>
+                  <option value="sc">SC</option>
+                  <option value="st">ST</option>
+                  <option value="minority">Minority</option>
+                </select>
+              </label>
+              <label
+                >Class or course
+                <select id="level" required>
+                  <option value="">Select</option>
+                  <option value="pre">Class 9 or 10</option>
+                  <option value="inter">Class 11 or 12</option>
+                  <option value="dashmottar">
+                    Degree, diploma or postgraduate course
+                  </option>
+                </select>
+              </label>
+              <label
+                >Annual family income (₹)
+                <input
+                  id="income"
+                  type="number"
+                  min="0"
+                  max="100000000"
+                  step="1"
+                  placeholder="e.g. 150000"
+                  required
+                  inputmode="numeric"
+                />
+              </label>
+              <label
+                >Where do you study?
+                <select id="study">
+                  <option value="up">In Uttar Pradesh</option>
+                  <option value="outside">Outside Uttar Pradesh</option>
+                  <option value="unknown">Not sure</option>
+                </select>
+              </label>
+              <label
+                >Application type
+                <select id="applicationType">
+                  <option value="fresh">Fresh</option>
+                  <option value="renewal">Renewal</option>
+                </select>
+              </label>
+              <label
+                >Is your institution recognised for the scheme?
+                <select id="recognised">
+                  <option value="unknown">Not sure</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </label>
+              <label
+                >Did you pass the previous exam?
+                <select id="passed">
+                  <option value="unknown">Not sure</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </label>
+            </div>
+            <div class="actions">
+              <button class="button" type="submit">Check eligibility</button>
+              <button class="button secondary" type="button" id="fillDemo">
+                Use a sample profile
+              </button>
+            </div>
+            <p id="eligError" class="error" role="alert"></p>
+            <p class="hint">
+              GramPath uses your answers for this check and does not save them.
+            </p>
+          </form>
+
+          <div class="result-wrap">
+            <div id="eligEmpty" class="panel result-empty">
+              <h2>Your result</h2>
+              <p>
+                Complete the form to see which conditions you meet and what you
+                should confirm.
+              </p>
+              <p>
+                This is a preliminary check. The official portal has the current
+                rules and application dates.
+              </p>
+              <a
+                href="https://scholarship.up.gov.in/"
+                target="_blank"
+                rel="noopener"
+                >Open UP Scholarship portal ↗</a
+              >
+            </div>
+            <div
+              id="eligResult"
+              class="panel hidden"
+              tabindex="-1"
+              aria-live="polite"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="documents" class="section">
+        <h2>Document checklist</h2>
+        <p class="section-intro">
+          Choose your course and category above to see a preparation checklist.
+          Your progress is saved in this browser.
+        </p>
+        <div class="panel">
+          <div class="panel-header">
+            <strong id="docCount">Loading checklist…</strong>
+            <button class="button secondary" id="exportChecklist" type="button" disabled>
+              Download checklist
+            </button>
+          </div>
+          <progress
+            id="docBar"
+            max="100"
+            value="0"
+            aria-label="Document readiness"
+          ></progress>
+          <div id="docList" class="doc-list"></div>
+        </div>
+      </section>
+
+      <section id="deadline" class="section">
+        <h2>Can I finish before the deadline?</h2>
+        <p class="section-intro">
+          Compare the days you have left with the time you expect to spend
+          preparing documents.
+        </p>
+        <div class="two-cols">
+          <form id="deadlineForm" class="panel">
+            <div class="form-grid">
+              <label
+                >Application deadline
+                <input type="date" id="planDeadline" required
+              /></label>
+              <label
+                >Application type
+                <select id="planType">
+                  <option value="fresh">Fresh</option>
+                  <option value="renewal">Renewal</option>
+                </select></label
+              >
+              <label
+                >Days for your slowest pending document
+                <input
+                  type="number"
+                  id="processingDays"
+                  min="0"
+                  max="365"
+                  value="7"
+                  required
+              /></label>
+              <label
+                >Extra days for corrections
+                <input
+                  type="number"
+                  id="bufferDays"
+                  min="0"
+                  max="90"
+                  value="0"
+                  required
+              /></label>
+            </div>
+            <div class="actions">
+              <button class="button" type="submit">Compare dates</button
+              ><button class="button secondary" type="button" id="fillDeadline">
+                Try a five-day example
+              </button>
+            </div>
+            <p class="hint">
+              Enter a deadline from the official notice and your own processing
+              estimate.
+            </p>
+          </form>
+          <div id="riskCard" class="panel">
+            <h3>Time available and time needed</h3>
+            <div class="bar-row">
+              <div>
+                <span>Days available</span><strong id="daysAvailable">—</strong>
+              </div>
+              <progress
+                id="availableBar"
+                max="1"
+                value="0"
+                aria-label="Time available"
+              ></progress>
+            </div>
+            <div class="bar-row">
+              <div>
+                <span>Days needed</span><strong id="daysNeeded">—</strong>
+              </div>
+              <progress
+                id="neededBar"
+                max="1"
+                value="0"
+                aria-label="Time needed"
+              ></progress>
+            </div>
+            <p id="riskMessage" class="risk-message" role="status">
+              Enter a deadline to compare.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="help" class="section">
+        <h2>Help with your application</h2>
+        <div class="two-cols">
+          <div class="panel">
+            <h3>Find an answer</h3>
+            <div class="ask-row">
+              <input
+                id="askInput"
+                placeholder="e.g. income certificate"
+                aria-label="Search application help"
+              /><button class="button secondary" id="askButton" type="button">
+                Search
+              </button>
+            </div>
+            <div class="quick-questions">
+              <button type="button" data-question="income certificate">
+                Income certificate</button
+              ><button type="button" data-question="rejected document">
+                Rejected document</button
+              ><button type="button" data-question="verify document">
+                Verify a document
+              </button>
+            </div>
+            <div id="askAnswer" class="answer-box" aria-live="polite">
+              Search the guide or choose a topic.
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Find local help</h3>
+            <label
+              >District
+              <input id="district" maxlength="90" placeholder="e.g. Ghaziabad"
+            /></label>
+            <button class="button secondary" id="findCentre" type="button">
+              Search for a service centre ↗
+            </button>
+            <p class="hint">
+              Confirm the service and opening hours before visiting.
+            </p>
+          </div>
+          <div class="panel" id="scan">
+            <h3>Check a scan before uploading</h3>
+            <p class="hint">
+              Checks image size, resolution and contrast on your device. Use the
+              issuer’s website to verify a document.
+            </p>
+            <label class="file-picker"
+              >Choose a JPG, PNG or WebP
+              <input
+                id="fileCheck"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+            /></label>
+            <div id="scanResult" class="scan-result" aria-live="polite"></div>
+          </div>
+          <div class="panel" id="payment">
+            <h3>Approved but payment hasn’t arrived?</h3>
+            <label
+              >What do you see?
+              <select id="paymentIssue">
+                <option value="approved">Approved, no payment received</option>
+                <option value="pending">
+                  Application submitted, awaiting payment
+                </option>
+                <option value="dbt">Bank linking or DBT error</option>
+                <option value="rejected">Payment failed or was returned</option>
+                <option value="unknown">The status is unclear</option>
+              </select>
+            </label>
+            <button id="paymentAction" class="button secondary" type="button">
+              Show next steps
+            </button>
+            <div
+              id="paymentResult"
+              class="payment-result"
+              aria-live="polite"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="schemes" class="section">
+        <h2>Scholarship pathways</h2>
+        <p class="section-intro">
+          Browse the records used by GramPath and check their sources.
+        </p>
+        <div class="toolbar">
+          <input
+            type="search"
+            id="schemeSearch"
+            placeholder="Search by class, degree or scheme name"
+            aria-label="Search scholarship pathways"
+          /><span id="schemeCount" class="hint" aria-live="polite"></span>
+        </div>
+        <div id="schemeCards" class="scheme-grid"></div>
+        <details class="panel source-details" id="sources">
+          <summary>Sources and official services</summary>
+          <div id="sourceList" class="source-grid"></div>
+        </details>
+      </section>
+      <section id="data" class="section hidden">
+        <div class="section-heading">
+          <div>
+            <h2>Local database manager</h2>
+            <p>
+              Add or update records in <code>grampath.sqlite3</code> using this
+              form. Reload the scheme explorer to see changes — no HTML code
+              editing required.
+            </p>
+          </div>
+          <span class="pill warning-pill">Admin key required</span>
+        </div>
+        <div class="panel admin-auth-panel">
+          <div>
+            <h3>Unlock the database editor</h3>
+            <p>Use the admin key printed in your VS Code terminal.</p>
+          </div>
+          <div class="admin-auth-form">
+            <input
+              id="adminKey"
+              type="password"
+              autocomplete="off"
+              placeholder="Paste admin key from terminal"
+              aria-label="Admin key"
+            /><button id="unlockAdmin" class="button" type="button">
+              Unlock editor</button
+            ><button id="lockAdmin" class="button secondary" type="button">
+              Lock
+            </button>
+          </div>
+          <p id="adminStatus" class="hint">
+            Locked. Read and write admin endpoints are protected.
+          </p>
+        </div>
+        <div id="adminWorkspace" class="hidden">
+          <div class="two-cols">
+            <form id="dataForm" class="panel">
+              <h3>Add or update scheme</h3>
+              <div class="form-grid">
+                <label
+                  >Record ID<input
+                    id="dataId"
+                    required
+                    placeholder="e.g. my-test-scheme" /></label
+                ><label
+                  >Level<select id="dataLevel">
+                    <option value="dashmottar">Dashmottar</option>
+                    <option value="inter">Intermediate</option>
+                    <option value="pre">Pre-matric</option>
+                  </select></label
+                ><label class="wide"
+                  >Scheme name<input
+                    id="dataTitle"
+                    required
+                    placeholder="Scheme title" /></label
+                ><label class="wide"
+                  >Description<textarea
+                    id="dataDesc"
+                    rows="2"
+                    placeholder="Who is it for?"
+                  ></textarea></label
+                ><label
+                  >Fresh deadline (if verified)<input
+                    id="dataFresh"
+                    type="date" /></label
+                ><label
+                  >Renewal deadline (if verified)<input
+                    id="dataRenew"
+                    type="date" /></label
+                ><label class="wide"
+                  >Official source URL<input
+                    id="dataUrl"
+                    type="url"
+                    placeholder="https://..." /></label
+                ><label class="wide"
+                  >Source notes<textarea
+                    id="dataNotes"
+                    rows="2"
+                    placeholder="Who published this? When? Any uncertainties?"
+                  ></textarea>
+                </label>
+              </div>
+              <button type="submit" class="button">
+                Save to SQLite database
+              </button>
+              <div id="saveMessage" class="hint" aria-live="polite"></div>
+            </form>
+            <div class="panel">
+              <h3>Records in SQLite</h3>
+              <p>
+                Choose a record to edit its deadline and other information.
+                Changes are protected by a private admin key and stored in
+                SQLite. This is not an authorized government portal connection.
+              </p>
+              <div id="adminRecords" class="admin-list"></div>
+            </div>
+          </div>
+          <div class="panel rule-manager">
+            <div class="section-heading">
+              <div>
+                <h3>Income eligibility rules — editable SQLite settings</h3>
+                <p>
+                  Rules are source-linked per category. Only update these after
+                  verifying the official notice; public users must not get this
+                  editor in production.
+                </p>
+              </div>
+            </div>
+            <div id="ruleTable" class="rule-table"></div>
+            <form id="ruleForm" class="rule-form">
+              <label
+                >Category<select id="ruleCat">
+                  <option value="general">General</option>
+                  <option value="ews">General-EWS</option>
+                  <option value="obc">OBC</option>
+                  <option value="sc">SC</option>
+                  <option value="st">ST</option>
+                  <option value="minority">Minority</option>
+                </select></label
+              ><label
+                >Published baseline ceiling (₹)<input
+                  id="ruleBase"
+                  type="number"
+                  min="0"
+                  required /></label
+              ><label
+                >Announced / upper ceiling (₹)<input
+                  id="ruleUpper"
+                  type="number"
+                  min="0"
+                  required /></label
+              ><label class="wide"
+                >Official source URL<input
+                  id="ruleUrl"
+                  type="url"
+                  required /></label
+              ><label class="wide"
+                >Verification notes<input id="ruleNotes" required /></label
+              ><button class="button" type="submit">
+                Save eligibility rule to database
+              </button>
+              <p id="ruleMessage" class="hint"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="container footer-row">
+        <span>GramPath · Student project</span
+        ><a href="https://scholarship.up.gov.in/" target="_blank" rel="noopener"
+          >Official UP Scholarship portal ↗</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>
